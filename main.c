@@ -1,7 +1,9 @@
 #include<stdio.h>
 //Inicio del trabajo.
 int main() {
-    printf("Hello World");
+    int x;
+    printf("Numero:");
+    scanf("%d",&x);
 
 
 
