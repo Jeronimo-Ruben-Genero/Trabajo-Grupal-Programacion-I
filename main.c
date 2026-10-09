@@ -153,7 +153,7 @@ void menu () {
     return;
 }
 int main() {
-    //paso 2. iniciar menu.
+    //paso 2. iniciar menu
     menu();
 
 
