@@ -1,8 +1,16 @@
 #include<stdio.h>
-#include<stbool.h>
+#include<stdbool.h>
 #include<ctype.h>
 #include<string.h>
 #define LIM 7
+//paso 1. definir struct.
+typedef struct {
+    char Patente[LIM];
+    char TipoServicio;
+    int NumeroOrden;
+    float Costo;
+    bool Finalizo;
+}t_auto;
 bool continua() {
     char continua;
     bool eleccion;
@@ -71,7 +79,7 @@ void IngresarDatos(t_auto a) {
         fflush(stdin);
         scanf("%d", &a.Finalizo);
         if(a.Finalizo == 1) {
-            a.finalizo=true;
+            a.Finalizo=true;
         }else if(a.Finalizo == 0) {
             a.Finalizo=false;
         }
@@ -90,7 +98,7 @@ void AgregarOrden() {
     if (Service_De_Autos == NULL) puts("Error al abrir el archivo");
     else {
         while (sigo) {
-            a=IngresarDatos();
+            a=IngresarDatos(a);
             fprintf(Service_De_Autos,"%s %c %d %f %d", a.Patente, a.TipoServicio, a.NumeroOrden, a.Costo, a.Finalizo );
             sigo = continua();
         }
@@ -132,14 +140,6 @@ void menu () {
     return;
 }
 int main() {
-    //paso 1. definir struct.
-    typedef struct {
-        char Patente[LIM];
-        char TipoServicio;
-        int NumeroOrden;
-        float Costo;
-        bool Finalizo;
-    }t_auto;
     //paso 2. iniciar menu.
     menu();
 
