@@ -41,6 +41,9 @@ t_auto IngresarDatos(t_auto a) {
         printf("Ingrese la patente del auto a revisar: ");
         fflush(stdin);
         scanf("%7s", a.Patente);
+        for (int i = 0; i < strlen(a.Patente); i++) {
+            a.Patente[i] = toupper(a.Patente[i]);
+        }
         if (a.Patente[0] == '\0') {
             printf("La patente no existe\n");
         }
@@ -100,7 +103,7 @@ void AgregarOrden() {
     else {
         while (sigo) {
             a=IngresarDatos(a);
-            fprintf(Service_De_Autos,"%s %c %d %f %d\n", a.Patente, a.TipoServicio, a.NumeroOrden, a.Costo, a.Finalizo );
+            fprintf(Service_De_Autos,"%s %c %d %.2f %d\n", a.Patente, a.TipoServicio, a.NumeroOrden, a.Costo, a.Finalizo );
             sigo = continua();
         }
         fclose (Service_De_Autos);
@@ -109,6 +112,45 @@ void AgregarOrden() {
 
 
 }
+void ListadoCompleto() {
+    char Patente[LIM];
+    char Tipo;
+    int Orden;
+    float costo;
+    int finalizado;
+    FILE *Service_De_Autos = fopen ("Service_De_Autos.txt", "r");
+    if (Service_De_Autos == NULL) puts("Error al abrir el archivo");
+    else {
+        printf("PATENTE\tSERVICIO\t\tORDEN\tCOSTO\t\tFINALIZADO\n");
+        while (fscanf(Service_De_Autos, "%7s %c %d %f %d",
+              Patente, &Tipo, &Orden, &costo, &finalizado) == 5) {
+            printf("%s\t", Patente);
+
+            switch (Tipo) {
+                case 'A':
+                    printf("Cambio de aceite\t");
+                    break;
+                case 'M':
+                    printf("Revision de motor\t");
+                    break;
+                case 'C':
+                    printf("Revision de chasis\t");
+                    break;
+            }
+
+            printf("%d\t%.2f\t", Orden, costo);
+
+            if (finalizado == 1) {
+                printf("Si\n");
+            } else {
+                printf("No\n");
+            }
+        }
+
+        fclose(Service_De_Autos);
+    }
+    return;
+    }
 void menu () {
     int menu;
 
@@ -124,7 +166,7 @@ void menu () {
                 break;
             }
             case 2: {
-                //ListadoCompleto();
+                ListadoCompleto();
                 break;
             }
             case 3: {
