@@ -151,6 +151,48 @@ void ListadoCompleto() {
     }
     return;
     }
+
+void ListadoPendientes() {
+    char Patente[LIM];
+    char Tipo;
+    int Orden;
+    float costo;
+    int finalizado;
+
+    FILE *Service_De_Autos = fopen("Service_De_Autos.txt", "r");
+
+    if (Service_De_Autos == NULL) {
+        puts("Error al abrir el archivo");
+    } else {
+        printf("PATENTE\tSERVICIO\t\tORDEN\tCOSTO\t\tFINALIZADO\n");
+
+        while (fscanf(Service_De_Autos, "%7s %c %d %f %d",
+                      Patente, &Tipo, &Orden, &costo, &finalizado) == 5) {
+
+            if (finalizado == 0) {
+                printf("%s\t", Patente);
+
+                switch (Tipo) {
+                    case 'A':
+                        printf("Cambio de aceite\t");
+                        break;
+                    case 'M':
+                        printf("Revision de motor\t");
+                        break;
+                    case 'C':
+                        printf("Revision de chasis\t");
+                        break;
+                }
+
+                printf("%d\t%.2f\tNo\n", Orden, costo);
+            }
+                      }
+
+        fclose(Service_De_Autos);
+    }
+    return;
+}
+
 void menu () {
     int menu;
 
@@ -170,7 +212,7 @@ void menu () {
                 break;
             }
             case 3: {
-                //ListadoPendientes();
+                ListadoPendientes();
                 break;
             }
             case 4: {
