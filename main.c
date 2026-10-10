@@ -79,7 +79,7 @@ t_auto IngresarDatos(t_auto a) {
     }while (a.Costo <= 0 );
 
     int respuesta;
-
+    //use este int respuesta para poder usar %d y detectar como entero a 1 o 0 y asignarle true o false al booleano.
     do {
         printf("(1) Si.\n(0) No.\nIndique si el servicio ha finalizado: ");
         scanf("%d", &respuesta);
