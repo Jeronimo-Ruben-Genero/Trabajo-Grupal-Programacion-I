@@ -236,6 +236,78 @@ void menu () {
 
     return;
 }
+
+void BuscarPatente() {
+    // Declaración de variables
+    char patenteBuscada[LIM];
+    char Patente[LIM];
+    char Tipo;
+    int Orden;
+    float costo;
+    int finalizado;
+    bool encontrado = false;
+
+    // Pide la patente y la convierte a mayusculas
+    printf("Ingrese la patente que desea buscar: ");
+    scanf("%7s", patenteBuscada);
+
+    for (int i = 0; patenteBuscada[i] != '\0'; i++) {
+        patenteBuscada[i] = toupper(patenteBuscada[i]);
+    }
+
+    // Abre el archivo
+    FILE *Service_De_Autos = fopen("Service_De_Autos.txt", "r");
+
+    if (Service_De_Autos == NULL) {
+        printf("Error al abrir el archivo.\n");
+    } else {
+        printf("Servicios correspondientes a la patente %s:\n", patenteBuscada);
+        printf("PATENTE\tSERVICIO\t\tORDEN\tCOSTO\t\tFINALIZADO\n");
+
+        // Lee el archivo registro por registro (5 campos)
+        while (fscanf(Service_De_Autos, "%7s %c %d %f %d", Patente, &Tipo, &Orden, &costo, &finalizado) == 5) {
+
+            // Si coincide la patente, muestra el detalle del servicio
+            if (strcmp(patenteBuscada, Patente) == 0) {
+                encontrado = true;
+
+                printf("%s\t", Patente);
+
+                // Muestra la descripción según el tipo de servicio
+                switch (Tipo) {
+                    case 'A':
+                        printf("Cambio de aceite\t");
+                        break;
+                    case 'M':
+                        printf("Revision de motor\t");
+                        break;
+                    case 'C':
+                        printf("Revision de chasis\t");
+                        break;
+                }
+
+                printf("%d\t%.2f\t", Orden, costo);
+
+                // Muestra si el trabajo está finalizado o no
+                if (finalizado == 1) {
+                    printf("Si\n");
+                } else {
+                    printf("No\n");
+                }
+            }
+        }
+
+        // Si no la encontró devuelve el error
+        if (encontrado == false) {
+            printf("No se encontraron servicios para esa patente.\n");
+        }
+
+        // Cierra el archivo
+        fclose(Service_De_Autos);
+    }
+}
+
+
 int main() {
     //paso 2. iniciar menu
     menu();
