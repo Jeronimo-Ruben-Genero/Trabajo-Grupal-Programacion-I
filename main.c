@@ -313,14 +313,19 @@ void SepararServicios() {
     printf("\nLos servicios se han separado correctamente en ambos archivos.\n\n");
 }
 
-//Menu de las opciones
+//Menú de las opciones
 void menu () {
     int menu;
 
     do {
-        printf("(1)Agregar orden de servicio.\n(2)Mostrar en pantalla listado de servicios.\n(3)Mostrar en pantalla listado de servicios pendientes.");
-        printf("\n(4)Buscar un servicio por patente.\n(5)Separar servicios finalizados y pendientes en dos archivos.\n(0)Salir.");
-        printf("\nIntroduzca su eleccion: ");
+        printf("\n MENU \n");
+        printf("1. Agregar orden de servicio\n");
+        printf("2. Mostrar listado completo de servicios\n");
+        printf("3. Mostrar listado de servicios pendientes\n");
+        printf("4. Buscar servicio por patente\n");
+        printf("5. Separar servicios finalizados y pendientes en archivos\n");
+        printf("0. Salir\n");
+        printf("\n Introduzca su eleccion: ");
         scanf("%d", &menu);
 
         switch (menu) {
