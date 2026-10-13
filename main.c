@@ -2,8 +2,10 @@
 #include<stdbool.h>
 #include<ctype.h>
 #include<string.h>
-#define LIM 8
-//paso 1. definir struct.
+#define LIM 8 //Caracteres patente + nulo \0
+
+
+//Funcion que define la estructura
 typedef struct {
     char Patente[LIM];
     char TipoServicio;
@@ -11,6 +13,8 @@ typedef struct {
     float Costo;
     bool Finalizo;
 }t_auto;
+
+//Funcion que pregunta al usuario si desea continuar
 bool continua() {
     char continua;
     bool eleccion;
@@ -30,11 +34,10 @@ bool continua() {
     }else{
         eleccion=true;
     }
-
-
-
     return eleccion;
 }
+
+//Funcion para ingresar los datos de un nuevo servicio
 t_auto IngresarDatos(t_auto a) {
 
     do {
@@ -42,13 +45,14 @@ t_auto IngresarDatos(t_auto a) {
         fflush(stdin);
         scanf("%7s", a.Patente);
         for (int i = 0; i < strlen(a.Patente); i++) {
-            a.Patente[i] = toupper(a.Patente[i]);
+            a.Patente[i] = toupper(a.Patente[i]); //Convierte a mayusculas
         }
         if (a.Patente[0] == '\0') {
             printf("La patente no existe\n");
         }
     }while (a.Patente[0] == '\0');
 
+    // Validar tipo de servicio
     do {
         printf("(A)Cambio de aceite.\n(M)Revision de motor.\n(C)Revision de chasis.\nSeleccione el servicio que desee: ");
         fflush(stdin);
@@ -59,6 +63,7 @@ t_auto IngresarDatos(t_auto a) {
         }
     }while (a.TipoServicio != 'A' && a.TipoServicio != 'M' && a.TipoServicio != 'C');
 
+    //Validar N° de orden
     do {
         printf("Introduzca el numero de orden: ");
         fflush(stdin);
@@ -68,7 +73,7 @@ t_auto IngresarDatos(t_auto a) {
         }
     }while (a.NumeroOrden < 1);
 
-
+    //Validar costo del servicio
     do {
         printf("Introduzca el costo del servicio: ");
         fflush(stdin);
@@ -78,8 +83,8 @@ t_auto IngresarDatos(t_auto a) {
         }
     }while (a.Costo <= 0 );
 
-    int respuesta;
-    //use este int respuesta para poder usar %d y detectar como entero a 1 o 0 y asignarle true o false al booleano.
+    int respuesta; //use este int respuesta para poder usar %d y detectar como entero a 1 o 0 y asignarle true o false al booleano.
+    // Desea continuar?
     do {
         printf("(1) Si.\n(0) No.\nIndique si el servicio ha finalizado: ");
         scanf("%d", &respuesta);
@@ -95,6 +100,8 @@ t_auto IngresarDatos(t_auto a) {
 
     return a;
 }
+
+//Agrega ordenes al archivo txt
 void AgregarOrden() {
     t_auto a;
     bool sigo=true;
@@ -103,15 +110,16 @@ void AgregarOrden() {
     else {
         while (sigo) {
             a=IngresarDatos(a);
+            //Guarda los datos en una nueva linea
             fprintf(Service_De_Autos,"%s %c %d %.2f %d\n", a.Patente, a.TipoServicio, a.NumeroOrden, a.Costo, a.Finalizo );
             sigo = continua();
         }
         fclose (Service_De_Autos);
     }
 
-
-
 }
+
+//Imprime en pantalla el listado completo
 void ListadoCompleto() {
     char Patente[LIM];
     char Tipo;
@@ -126,6 +134,7 @@ void ListadoCompleto() {
               Patente, &Tipo, &Orden, &costo, &finalizado) == 5) {
             printf("%s\t", Patente);
 
+            //Imprime el nombre del servicio segun el caracter ingresado
             switch (Tipo) {
                 case 'A':
                     printf("Cambio de aceite\t");
@@ -152,6 +161,7 @@ void ListadoCompleto() {
     return;
     }
 
+//Listado de servicios pendientes
 void ListadoPendientes() {
     char Patente[LIM];
     char Tipo;
@@ -169,6 +179,7 @@ void ListadoPendientes() {
         while (fscanf(Service_De_Autos, "%7s %c %d %f %d",
                       Patente, &Tipo, &Orden, &costo, &finalizado) == 5) {
 
+            //Filtro para incluir solo los no terminados
             if (finalizado == 0) {
                 printf("%s\t", Patente);
 
@@ -193,50 +204,7 @@ void ListadoPendientes() {
     return;
 }
 
-void menu () {
-    int menu;
-
-    do {
-        printf("(1)Agregar orden de servicio.\n(2)Mostrar en pantalla listado de servicios.\n(3)Mostrar en pantalla listado de servicios pendientes.");
-        printf("\n(4)Buscar un servicio por patente.\n(5)Separar servicios finalizados y pendientes en dos archivos.\n(0)Salir.");
-        printf("\nIntroduzca su eleccion: ");
-        scanf("%d", &menu);
-
-        switch (menu) {
-            case 1: {
-                AgregarOrden();
-                break;
-            }
-            case 2: {
-                ListadoCompleto();
-                break;
-            }
-            case 3: {
-                ListadoPendientes();
-                break;
-            }
-            case 4: {
-                //BuscarPatente();
-                break;
-            }
-            case 5: {
-               // SepararSericios();
-                break;
-            }
-            case 0: {
-                printf("El programa ha finalizado.");
-                break;
-            }
-            default: {
-                printf("Opcion invalida. Ingrese nuevamente.\n");
-                break;
-            }
-        }
-    }while (menu!=0);
-
-    return;
-}
-
+// Funcion que busca los servicios por patente
 void BuscarPatente() {
     // Declaración de variables
     char patenteBuscada[LIM];
@@ -307,6 +275,50 @@ void BuscarPatente() {
     }
 }
 
+//Menu de las opciones
+void menu () {
+    int menu;
+
+    do {
+        printf("(1)Agregar orden de servicio.\n(2)Mostrar en pantalla listado de servicios.\n(3)Mostrar en pantalla listado de servicios pendientes.");
+        printf("\n(4)Buscar un servicio por patente.\n(5)Separar servicios finalizados y pendientes en dos archivos.\n(0)Salir.");
+        printf("\nIntroduzca su eleccion: ");
+        scanf("%d", &menu);
+
+        switch (menu) {
+            case 1: {
+                AgregarOrden();
+                break;
+            }
+            case 2: {
+                ListadoCompleto();
+                break;
+            }
+            case 3: {
+                ListadoPendientes();
+                break;
+            }
+            case 4: {
+                BuscarPatente();
+                break;
+            }
+            case 5: {
+               // SepararServicios();
+                break;
+            }
+            case 0: {
+                printf("El programa ha finalizado.");
+                break;
+            }
+            default: {
+                printf("Opcion invalida. Ingrese nuevamente.\n");
+                break;
+            }
+        }
+    }while (menu!=0);
+
+    return;
+}
 
 int main() {
     //paso 2. iniciar menu
