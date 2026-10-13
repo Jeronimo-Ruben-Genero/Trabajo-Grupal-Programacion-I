@@ -275,6 +275,44 @@ void BuscarPatente() {
     }
 }
 
+// Función que separa los registros del archivo principal en dos (pendientes / finalizados)
+void SepararServicios() {
+    // Declaración de variables
+    char Patente[LIM];
+    char Tipo;
+    int Orden;
+    float costo;
+    int finalizado;
+
+    // Abrir el archivo de entrada para leerlo
+    FILE *origen = fopen("Service_De_Autos.txt", "r");
+    if (origen == NULL) {
+        printf("Error al abrir el archivo de origen (Service_De_Autos.txt).\n");
+        return;
+    } // da un error si es que no lo puede abrir
+
+    // Crea/abre los dos archivos pedidos
+    FILE *f_finalizados = fopen("Servicios_Finalizados.txt", "w");
+    FILE *f_pendientes = fopen("Servicios_Pendientes.txt", "w");
+
+    // Recorrer el archivo de origen y clasificar los datos
+    while (fscanf(origen, "%7s %c %d %f %d", Patente, &Tipo, &Orden, &costo, &finalizado) == 5) {
+        if (finalizado == 1) {
+            fprintf(f_finalizados, "%s %c %d %.2f %d\n", Patente, Tipo, Orden, costo, finalizado);
+        } else {
+            fprintf(f_pendientes, "%s %c %d %.2f %d\n", Patente, Tipo, Orden, costo, finalizado);
+        }
+    }
+
+    // Cerrar todos los archivos
+    fclose(origen);
+    fclose(f_finalizados);
+    fclose(f_pendientes);
+
+    // Confirmación para el usuario
+    printf("\nLos servicios se han separado correctamente en ambos archivos.\n\n");
+}
+
 //Menu de las opciones
 void menu () {
     int menu;
@@ -303,7 +341,7 @@ void menu () {
                 break;
             }
             case 5: {
-               // SepararServicios();
+               SepararServicios();
                 break;
             }
             case 0: {
@@ -321,10 +359,8 @@ void menu () {
 }
 
 int main() {
-    //paso 2. iniciar menu
+    //Iniciar menu
     menu();
-
-
 
     return 0;
 }
